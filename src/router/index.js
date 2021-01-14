@@ -10,19 +10,8 @@ export default new Router({
       path: '/',
       component: () => import('../components/layout'),
       children: [
-        {
-          path: 'user',
-          component: () => import('../components/student'),
-        },{
-          
-            path:'/user/add',
-            component:()=>import('../components/studentInfo')
-          
-        },
-        {
-          path: 'list',
-          component: () => import('../components/list')
-        },
+        {path:'menu',component:()=>import('../components/menu/index')},
+        {path:'menu/add',component:()=>import('../components/menu/info')}
       ]
     }
   ]

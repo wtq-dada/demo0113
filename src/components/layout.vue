@@ -16,8 +16,7 @@
               <i class="el-icon-user-solid"></i>
               <span>管理菜单</span>
             </template>
-            <el-menu-item index="/user">学生管理</el-menu-item>
-            <el-menu-item index="/list">课程管理</el-menu-item>
+            <el-menu-item index="/menu">菜单管理</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -37,7 +36,6 @@ export default {};
 .el-header {
   background-color: skyblue;
   color: #fff;
-  /* text-align: center; */
   font-size: 25px;
   line-height: 60px;
 }
