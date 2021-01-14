@@ -20,9 +20,9 @@
                 </template>
             </el-table-column>
             <el-table-column label="操作"  width="150">
-                <template>
+                <template slot-scope="item">
                     <el-button size="mini" type="primary">编辑</el-button>
-                    <el-button size="mini" type="danger">删除</el-button>
+                    <el-button size="mini" type="danger" @click="del(item.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -40,6 +40,14 @@ export default {
         axios.get('/api/menulist').then(res=>{
             this.arr=res.data.list
         })
+    },
+    methods:{
+        del(id){
+            axios.post('/api/menudelete',{id}).then(res=>{
+                this.arr=res.data.list
+                console.log(this.arr);
+            })
+        }
     }
 }
 </script>
