@@ -1,10 +1,18 @@
 <template>
     <div>
-        <h1>菜单表单页</h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/menu' }">菜单管理</el-breadcrumb-item>
+            <el-breadcrumb-item>菜单{{tip}}</el-breadcrumb-item>
+        </el-breadcrumb>
         <el-form :model="info" :rules="rules" ref="menuform" style="width:500px;" label-width="80px">
             <el-form-item label="上级菜单" prop="pid">
-                <el-select v-model="info.pid">
+                <el-select v-model="info.pid" @change="pidChange">
                     <el-option label="顶级菜单" :value="0"></el-option>
+                    <el-option v-for="menuitem of menuarr"
+                                :key="menuitem.id"
+                                :label="menuitem.title"
+                                :value="menuitem.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="菜单名称" prop="title">
@@ -36,6 +44,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
+            tip:'添加',
             info:{
                 pid:'',
                 title:'',
@@ -52,25 +61,42 @@ export default {
                     {required:true,message:'请输入'},
                     {min:3,max:20,message:"名称应为3~20个字符之间"}
                 ],
-            }
+            },
+            menuarr:[]
         }
+    },
+    mounted(){
+        if(this.$route.params.id){
+            this.tip='编辑'
+            axios.get('/api/menuinfo',{params:{id:this.$route.params.id}}).then(result=>{
+                this.info = result.data.list
+            })
+        }
+        axios.get('/api/menulist?pid=0').then(res=>{
+            this.menuarr=res.data.list
+        })
     },
     methods:{
         submit(){
             this.$refs['menuform'].validate((val)=>{
                 if(val){
-                    // alert('验证成功')
-                    axios.post('/api/menuadd',this.info).then(res=>{
+                    var url = '/api/menuadd'
+                    if(this.$route.params.id){
+                        //如果是编辑操作，则执行修改的接口，并添加接口需要的必要参数
+                        url = '/api/menuedit'
+                        this.info.id = this.$route.params.id
+                    }
+                    axios.post(url,this.info).then(res=>{
                         if(res.data.code === 200){
                              this.$router.push('/menu')
-                        }else{
-                           alert(res.data.msg)
                         }
                     })
                 }
             })
-            // console.log(this.info);
+        },
+        pidChange(n){
+        this.info.type = n==0 ? 1 : 2;
         }
-    },
+    }
 }
 </script>

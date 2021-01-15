@@ -4,19 +4,29 @@
     <el-container>
       <el-aside width="200px">
         <el-menu
-          default-active="2"
+          :default-active="defaultActive"
           class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b"
           router
+          unique-opened
         >
-          <el-submenu index="/user">
+          <el-menu-item index="/">
+            <i class="el-icon-s-home"></i>
+            首页
+          </el-menu-item>
+          <el-submenu v-for="item of menus" :key="item.id" :index="item.title">
             <template slot="title">
-              <i class="el-icon-user-solid"></i>
-              <span>管理菜单</span>
+              <i :class="item.icon"></i>
+              <span>{{ item.title }}</span>
             </template>
-            <el-menu-item index="/menu">菜单管理</el-menu-item>
+            <el-menu-item
+              v-for="subitem of item.children"
+              :key="subitem.id"
+              :index="subitem.url"
+              >{{ subitem.title }}</el-menu-item
+            >
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -27,14 +37,33 @@
   </el-container>
 </template>
 <script>
-export default {};
+import axios from "axios";
+export default {
+  data() {
+    return {
+      menus: [],
+      defaultActive: "",
+    };
+  },
+  mounted() {
+    this.defaultActive = this.$route.meta.selected;
+    axios.get("/api/menulist", { params: { istree: true } }).then((res) => {
+      this.menus = res.data.list;
+    });
+  },
+  watch: {
+    $route(newVal) {
+      this.defaultActive = newVal.meta.selected;
+    },
+  },
+};
 </script>
 <style scpord>
 .wrap {
   height: 100vh;
 }
 .el-header {
-  background-color: skyblue;
+  background-color: #2f4f4f;
   color: #fff;
   font-size: 25px;
   line-height: 60px;
