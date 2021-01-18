@@ -1,14 +1,17 @@
 <template>
   <el-container class="wrap">
-    <el-header> 管理系统 </el-header>
+    <el-header> 
+        <span class="fl">管理系统</span>   
+        <span class="fr">欢迎：{{$store.state.userinfo.username}} <a href="" @click="quit">退出登录</a></span>
+    </el-header>
     <el-container>
       <el-aside width="200px">
         <el-menu
           :default-active="defaultActive"
           class="el-menu-vertical-demo"
-          background-color="#545c64"
+          background-color="#4682B4"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="	#FF4500"
           router
           unique-opened
         >
@@ -16,7 +19,7 @@
             <i class="el-icon-s-home"></i>
             首页
           </el-menu-item>
-          <el-submenu v-for="item of menus" :key="item.id" :index="item.title">
+          <el-submenu v-for="item of $store.state.userinfo.menus" :key="item.id" :index="item.title">
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
@@ -51,11 +54,17 @@ export default {
       this.menus = res.data.list;
     });
   },
-  watch: {
+  watch: { 
     $route(newVal) {
       this.defaultActive = newVal.meta.selected;
     },
   },
+  methods:{
+    quit(){
+      this.$store.commit('setUserInfo',null)
+      this.$router.replace('/login')
+    }
+  }
 };
 </script>
 <style scpord>
@@ -63,12 +72,27 @@ export default {
   height: 100vh;
 }
 .el-header {
-  background-color: #2f4f4f;
+  background-color:	#00BFFF;
   color: #fff;
   font-size: 25px;
   line-height: 60px;
 }
 .el-aside {
-  background: #545c64;
+  background: #4682B4;
+}
+.el-main{
+  background: 	#F0F8FF;
+}
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
+  font-size: 18px;
+}
+.fr a{
+  font-size: 13px;
+  color: #A9A9A9;
+  text-decoration: none;
 }
 </style>

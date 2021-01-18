@@ -17,6 +17,7 @@
                     node-key="id"
                     ref="mytree"
                     :default-expanded-keys="checkedKeys"
+                    check-strictly
                 ></el-tree>
             </el-form-item>
             <el-form-item label="状态">
@@ -29,7 +30,6 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
 export default {
     data() {
         return {
@@ -56,13 +56,13 @@ export default {
     mounted(){
         if(this.$route.params.id){
             this.tip='编辑'
-            axios.get('/api/roleinfo',{params:{id:this.$route.params.id}}).then(result=>{
+            this.axios.get('/api/roleinfo',{params:{id:this.$route.params.id}}).then(result=>{
                 this.info = result.data.list
                 this.checkedKeys = this.info.menus.split(',').map(d=>parseInt(d));
                 this.$refs.mytree.setCheckedKeys(this.checkedKeys)
             })
         }
-        axios.get('/api/menulist?istree=true').then(result=>{
+        this.axios.get('/api/menulist?istree=true').then(result=>{
             this.menusarr = result.data.list;
         })
     },
@@ -76,7 +76,7 @@ export default {
                         this.info.id = this.$route.params.id
                     }
                     this.info.menus = this.$refs.mytree.getCheckedKeys().join(',');
-                    axios.post(url,this.info).then(res=>{
+                    this.axios.post(url,this.info).then(res=>{
                         if(res.data.code === 200){
                              this.$router.push('/role')
                         }

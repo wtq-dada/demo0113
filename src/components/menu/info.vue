@@ -40,7 +40,6 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
 export default {
     data() {
         return {
@@ -68,11 +67,11 @@ export default {
     mounted(){
         if(this.$route.params.id){
             this.tip='编辑'
-            axios.get('/api/menuinfo',{params:{id:this.$route.params.id}}).then(result=>{
+            this.axios.get('/api/menuinfo',{params:{id:this.$route.params.id}}).then(result=>{
                 this.info = result.data.list
             })
         }
-        axios.get('/api/menulist?pid=0').then(res=>{
+        this.axios.get('/api/menulist?pid=0').then(res=>{
             this.menuarr=res.data.list
         })
     },
@@ -86,7 +85,7 @@ export default {
                         url = '/api/menuedit'
                         this.info.id = this.$route.params.id
                     }
-                    axios.post(url,this.info).then(res=>{
+                    this.axios.post(url,this.info).then(res=>{
                         if(res.data.code === 200){
                              this.$router.push('/menu')
                         }
